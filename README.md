@@ -90,8 +90,8 @@ The AI opponent. Implements a priority-tiered heuristic strategy — no minimax,
 |------|--------|-------------|
 | 1 | `tryScore()` | Scans the entire board for any move that immediately completes an SOS |
 | 2 | `tryBlock(lastMove)` | Checks cells near the opponent's last move for any threat to block |
-| 3 | `trySetup()` | Places an `S` on the cell with the most adjacent `S`/`O` neighbours to maximise future scoring potential |
-| 4 | `fallback()` | Places `S` on a random empty cell as a last resort |
+| 3 | `trySetup()` | Places an `S` or `O` on the cell with the most adjacent `S`/`O` neighbours to maximise future scoring potential |
+| 4 | `fallback()` | Places `S` or `O` randomly on a random empty cell as a last resort |
 
 **Key class:** `Bot(board)`
 
@@ -106,7 +106,7 @@ The complete graphical interface built with Tkinter. Manages both the setup scre
 - **Game screen:** Renders the board as a grid of buttons, handles click events, displays live scores and current player
 - Manages the `active_players` set to support mid-game player quitting
 - Schedules bot moves asynchronously using `root.after()` to avoid blocking the UI thread
-- `bot_active` flag prevents human input during the bot's turn
+- Player intervention during bot's turn is blocked  by `_set_bot_active_()` helper 
 - `resource_path()` helper resolves asset paths correctly for both script execution and PyInstaller-packaged executables
 
 **Key class:** `SOSGameGUI(root)`
