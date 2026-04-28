@@ -46,9 +46,9 @@ class Bot:
         return None
 
     def trySetup(self):
-        """Tier 3: Place S on the cell with the most adjacent S/O pieces"""
+        """Tier 3: Place S or O on the cell with the most adjacent S/O pieces (randomly if tied)"""
         size = self.board.getMAXSIZE()
-        best = None
+        best_cells = []
         bestScore = -1
         for i in range(size):
             for j in range(size):
@@ -57,18 +57,24 @@ class Bot:
                 score = self.setupScore(i, j)
                 if score > bestScore:
                     bestScore = score
-                    best = (i, j, "S")
-        return best
+                    best_cells = [(i, j)]
+                elif score == bestScore:
+                    best_cells.append((i, j))
+        if not best_cells:
+            return None
+        i, j = random.choice(best_cells)
+        symb = random.choice(["S", "O"])
+        return (i, j, symb)
 
     def fallback(self):
-        """Last resort: first available empty cell"""
+        """Last resort: pick a random empty cell and random symbol ('S' or 'O')"""
         size = self.board.getMAXSIZE()
-        for x in range(size*size):
-            i=random.randint(0, size-1)
-            j=random.randint(0, size-1)
-            if self.board.getCell(i, j) == self.board.getEmptyCellRep():
-                return (i, j, "S")
-        return None,None,None
+        empty_cells = [(i, j) for i in range(size) for j in range(size) if self.board.getCell(i, j) == self.board.getEmptyCellRep()]
+        if not empty_cells:
+            return None, None, None
+        i, j = random.choice(empty_cells)
+        symb = random.choice(["S", "O"])
+        return (i, j, symb)
 
     def setupScore(self, i, j):
         """Counts adjacent S/O pieces to score setup potential of a cell"""
